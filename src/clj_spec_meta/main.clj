@@ -23,8 +23,15 @@
                    :fn ~(get-in (meta fn-var) [meta-kw# :fn])))
               fn-vars#))))
 
+(defn fns-without-specs [{:keys [namespaces]}]
+  (->> (map ns-interns namespaces)
+       (mapcat vals)
+       (filter #(and (fn? (var-get %))
+                     (not (s/get-spec (symbol %)))))))
+
 (comment
   (macroexpand (quote (fdef-from-meta {:namespaces [clj-spec-meta.main]})))
   (fdef-from-meta {:namespaces [clj-spec-meta.main]})
   (s/get-spec 'clj-spec-meta.main/myfn)
+  (fns-without-specs {:namespaces ['clj-spec-meta.main]})
   )
