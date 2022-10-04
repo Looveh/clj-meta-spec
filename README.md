@@ -27,7 +27,7 @@ Replace this:
   [x y]
   (+ x y))
 
-(sm/fdef-from-meta {:namespaces [my-cool-project.main]})
+(sm/fdef-from-meta {:ns [my-cool-project.main]})
 ```
 
 Help yourself remember to add specs to all of your functions, easily:
@@ -46,9 +46,9 @@ Help yourself remember to add specs to all of your functions, easily:
 (defn my-other-fn [x y]
   (/ x y))
 
-(sm/fdef-from-meta {:namespaces [my-cool-project.main]})
+(sm/fdef-from-meta {:ns [my-cool-project.main]})
 
 (comment
-  (sm/fns-without-specs {:namespaces ['clj-spec-meta.main]}) => (#'my-cool-project.main/my-other-fn)
+  (sm/fns-without-specs {:ns ['clj-spec-meta.main]}) => (#'my-cool-project.main/my-other-fn)
   )
 ```

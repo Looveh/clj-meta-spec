@@ -57,8 +57,8 @@
                      (not (s/get-spec (symbol %)))))))
 
 (comment
-  (macroexpand (quote (fdef-from-meta {:namespaces [clj-spec-meta.main]})))
-  (fdef-from-meta {:namespaces [clj-spec-meta.main]})
+  (macroexpand (quote (fdef-from-meta {:ns [clj-spec-meta.main]})))
+  (fdef-from-meta {:ns [clj-spec-meta.main]})
   (macroexpand (quote (fdef-from-meta {:ns-regex #".*clj-spec-meta.*"})))
   (macroexpand (quote (fdef-from-meta {:exclude-ns #".*main.*"
                                        :ns-regex #".*clj-spec-meta.*"})))
