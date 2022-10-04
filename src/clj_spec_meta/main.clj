@@ -8,12 +8,13 @@
   [a b]
   (str a " " b))
 
-(defmacro fdef-from-meta [{:keys [namespaces functions meta-kw]}]
+(defmacro fdef-from-meta [{:keys [namespaces functions meta-kw exclude-fns]}]
   (let [meta-kw# (or meta-kw ::spec)
         fn-vars# (->> (map ns-interns namespaces)
                       (mapcat vals)
                       (filter #(and (fn? (var-get %))
-                                    (get (meta %) meta-kw#)))
+                                    (get (meta %) meta-kw#)
+                                    (not (contains? exclude-fns %))))
                       (concat functions))]
     `(do
        ~@(map (fn [fn-var]
