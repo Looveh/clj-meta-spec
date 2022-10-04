@@ -1,6 +1,6 @@
 (ns clj-spec-meta.main
   ;; TODO
-  ;; * Add cljs support, allegedly works within macros?
+  ;; * Add cljs support, allegedly works within macros? With cljs.analyzer.api/all-ns?
   (:require [clojure.spec.alpha :as s]))
 
 (defn- myfn
