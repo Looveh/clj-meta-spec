@@ -25,6 +25,11 @@
          (distinct))))
 
 (defmacro fdef-from-meta
+  ;; TODO
+  ;; * Add docs
+  ;; * Add tests
+  ;; * Add spec
+  ;; * Reconsider fn/arg names
   [{:keys [meta-kw ns-regex exclude-fn exclude-ns reset-specs?]
     fn' :fn ns' :ns
     :or {meta-kw ::spec}}]
