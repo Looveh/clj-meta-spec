@@ -8,11 +8,14 @@
   [a b]
   (str a " " b))
 
-(defn- find-fn-vars [{:keys [exclude-fn ns-regex] fn' :fn ns' :ns}]
+(defn- find-fn-vars [{:keys [ns-regex exclude-fn exclude-ns] fn' :fn ns' :ns}]
   (let [ns-matching-re (when ns-regex
                          (filter #(re-matches ns-regex (str (ns-name %)))
                                  (all-ns)))
         fn-in-ns (->> (concat ns' ns-matching-re)
+                      (filter #(if exclude-ns
+                                 (not (re-matches exclude-ns (str (ns-name %))))
+                                 true))
                       (map ns-interns)
                       (mapcat vals)
                       (filter #(fn? (var-get %))))]
@@ -22,14 +25,15 @@
          (distinct))))
 
 (defmacro fdef-from-meta
-  [{:keys [meta-kw ns-regex exclude-fn reset-specs?]
+  [{:keys [meta-kw ns-regex exclude-fn exclude-ns reset-specs?]
     fn' :fn ns' :ns
     :or {meta-kw ::spec}}]
   (let [fn-vars (find-fn-vars {:meta-kw meta-kw
                                :ns ns'
                                :ns-regex ns-regex
                                :fn fn'
-                               :exclude-fn exclude-fn})
+                               :exclude-fn exclude-fn
+                               :exclude-ns exclude-ns})
         spec-resets (map (fn [fn-var]
                            (when reset-specs?
                              `(s/def ~(symbol fn-var) nil)))
@@ -56,6 +60,8 @@
   (macroexpand (quote (fdef-from-meta {:namespaces [clj-spec-meta.main]})))
   (fdef-from-meta {:namespaces [clj-spec-meta.main]})
   (macroexpand (quote (fdef-from-meta {:ns-regex #".*clj-spec-meta.*"})))
+  (macroexpand (quote (fdef-from-meta {:exclude-ns #".*main.*"
+                                       :ns-regex #".*clj-spec-meta.*"})))
   (fdef-from-meta {:ns-regex #".*clj-spec-meta.*"})
   (s/get-spec 'clj-spec-meta.main/myfn)
   (fns-without-specs {:namespaces ['clj-spec-meta.main]})
