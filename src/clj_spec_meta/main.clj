@@ -8,9 +8,14 @@
   [a b]
   (str a " " b))
 
-(defmacro fdef-from-meta [{:keys [namespaces functions meta-kw exclude-fns]}]
+(defmacro fdef-from-meta [{:keys [namespaces functions meta-kw exclude-fns ns-regex]}]
   (let [meta-kw# (or meta-kw ::spec)
-        fn-vars# (->> (map ns-interns namespaces)
+        ns-matching-re (when ns-regex
+                         (filter #(re-matches ns-regex (str (ns-name %)))
+                                 (all-ns)))
+        fn-vars# (->> (concat namespaces ns-matching-re)
+                      (distinct)
+                      (map ns-interns)
                       (mapcat vals)
                       (filter #(and (fn? (var-get %))
                                     (get (meta %) meta-kw#)
@@ -33,6 +38,8 @@
 (comment
   (macroexpand (quote (fdef-from-meta {:namespaces [clj-spec-meta.main]})))
   (fdef-from-meta {:namespaces [clj-spec-meta.main]})
+  (macroexpand (quote (fdef-from-meta {:ns-regex #".*clj-spec-meta.*"})))
+  (fdef-from-meta {:ns-regex #".*clj-spec-meta.*"})
   (s/get-spec 'clj-spec-meta.main/myfn)
   (fns-without-specs {:namespaces ['clj-spec-meta.main]})
   )
