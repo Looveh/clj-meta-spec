@@ -8,12 +8,12 @@ Place fn specs inside the fn's metadata as:
             [meta-spec.core :as ms]))
 
 (defn foo
-  {::ms/spec {:args (s/cat :x int? :y int?)
-              :ret int?}}
+  {:spec {:args (s/cat :x int? :y int?)
+          :ret int?}}
   [x y]
   (+ x y))
 
-(ms/fdef-from-meta {:ns [my.project]})
+(ms/register {:ns [my.project]})
 ```
 
 ... instead of:
@@ -38,15 +38,15 @@ List all fns that do not (yet) have a spec associated with them:
             [meta-spec.core :as ms]))
 
 (defn foo
-  {::ms/spec {:args (s/cat :x int? :y int?)
-              :ret int?}}
+  {:spec {:args (s/cat :x int? :y int?)
+          :ret int?}}
   [x y]
   (+ x y))
 
 (defn bar [x y]
   (/ x y))
 
-(ms/fdef-from-meta {:ns [my.project]})
+(ms/register) ; Call after all fns have been defined in ns
 
 (comment
   (ms/fns-without-specs {:ns ['meta-spec.core]}) => (#'my.project/bar)
@@ -58,12 +58,12 @@ This can be helpful if you strive to have a project where all fns have specs.
 ## API
 
 ```clj
-(meta-spec.core/fdef-from-meta
+(meta-spec.core/register
   {
-   ;; A seq of namespaces
+   ;; A seq of namespaces. Defaults to [*ns*] if not provided.
    :ns [my.project]
 
-   ;; The meta keyword used to find spec definitions. Defaults to :meta-spec.core/spec
+   ;; The meta keyword used to find spec definitions. Defaults to :spec if not provided.
    :meta-kw :my.ns/spec
 
    ;; Finds all namespaces that matches this regex
