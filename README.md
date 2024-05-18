@@ -1,67 +1,69 @@
-# clj-spec-main
+# meta-spec
 
-Replace this:
+Place fn specs inside the fn's metadata as:
 
 ```clj
-(ns my-cool-project.main
-  (:require [clojure.spec.alpha :as s]))
+(ns my.project
+  (:require [clojure.spec.alpha :as s]
+            [meta-spec.core :as ms]))
 
-(defn my-fn [x y]
+(defn foo
+  {::ms/spec {:args (s/cat :x int? :y int?)
+              :ret int?}}
+  [x y]
   (+ x y))
 
-(s/fdef my-fn
+(ms/fdef-from-meta {:ns [my.project]})
+```
+
+... instead of:
+
+```clj
+(ns my.project
+  (:require [clojure.spec.alpha :as s]))
+
+(defn foo [x y]
+  (+ x y))
+
+(s/fdef foo
         :args (s/cat :x int? :y int?)
         :ret int?)
 ```
 
-... with this:
+List all fns that do not (yet) have a spec associated with them:
 
 ```clj
-(ns my-cool-project.main
+(ns my.project
   (:require [clojure.spec.alpha :as s]
-            [clj-spec-meta.main :as sm]))
+            [meta-spec.core :as ms]))
 
-(defn my-fn
-  {::sm/spec {:args (s/cat :x int? :y int?)
+(defn foo
+  {::ms/spec {:args (s/cat :x int? :y int?)
               :ret int?}}
   [x y]
   (+ x y))
 
-(sm/fdef-from-meta {:ns [my-cool-project.main]})
-```
-
-Help yourself remember to add specs to all of your functions, easily:
-
-```clj
-(ns my-cool-project.main
-  (:require [clojure.spec.alpha :as s]
-            [clj-spec-meta.main :as sm]))
-
-(defn my-fn
-  {::sm/spec {:args (s/cat :x int? :y int?)
-              :ret int?}}
-  [x y]
-  (+ x y))
-
-(defn my-other-fn [x y]
+(defn bar [x y]
   (/ x y))
 
-(sm/fdef-from-meta {:ns [my-cool-project.main]})
+(ms/fdef-from-meta {:ns [my.project]})
 
 (comment
-  (sm/fns-without-specs {:ns ['clj-spec-meta.main]}) => (#'my-cool-project.main/my-other-fn)
+  (ms/fns-without-specs {:ns ['meta-spec.core]}) => (#'my.project/bar)
   )
 ```
+
+This can be helpful if you strive to have a project where all fns have specs.
 
 ## API
 
 ```clj
-(clj-spec-meta.main/fdef-from-meta
+(meta-spec.core/fdef-from-meta
   {
    ;; A seq of namespaces
-   :ns [my-cool-project.main]
+   :ns [my.project]
 
-   ;; The meta keyword used to find spec definitions. Defaults to :clj-spec-meta.main/spec
+   ;; The meta keyword used to find spec definitions. Defaults to :meta-spec.core/spec
    :meta-kw :my.ns/spec
 
    ;; Finds all namespaces that matches this regex
@@ -79,6 +81,6 @@ Help yourself remember to add specs to all of your functions, easily:
    :reset-specs? true
 
    ;; A seq of fn symbols
-   :fn [my.ns/my-fn another.ns/and-fn]
+   :fn [my.ns/foo another.ns/and-fn]
    }
 ```

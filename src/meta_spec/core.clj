@@ -1,4 +1,4 @@
-(ns clj-spec-meta.main
+(ns meta-spec.core
   ;; TODO
   ;; * Add cljs support, allegedly works within macros? With cljs.analyzer.api/all-ns?
   (:require [clojure.spec.alpha :as s]))
@@ -64,13 +64,12 @@
                      (not (s/get-spec (symbol %)))))))
 
 (comment
-  (macroexpand (quote (fdef-from-meta {:ns [clj-spec-meta.main]})))
-  (fdef-from-meta {:ns [clj-spec-meta.main]})
-  (macroexpand (quote (fdef-from-meta {:ns-regex #".*clj-spec-meta.*"})))
+  (macroexpand (quote (fdef-from-meta {:ns [meta-spec.core]})))
+  (fdef-from-meta {:ns [meta-spec.core]})
+  (macroexpand (quote (fdef-from-meta {:ns-regex #".*meta-spec.*"})))
   (macroexpand (quote (fdef-from-meta {:exclude-ns #".*main.*"
-                                       :ns-regex #".*clj-spec-meta.*"})))
-  (fdef-from-meta {:ns-regex #".*clj-spec-meta.*"})
-  (s/get-spec 'clj-spec-meta.main/myfn)
-  (fns-without-specs {:namespaces ['clj-spec-meta.main]})
-  (s/def clj-spec-meta.main/myfn nil)
-  )
+                                       :ns-regex #".*meta-spec.*"})))
+  (fdef-from-meta {:ns-regex #".*meta-spec.*"})
+  (s/get-spec 'meta-spec.core/myfn)
+  (fns-without-specs {:namespaces ['meta-spec.core]})
+  (s/def meta-spec.core/myfn nil))
