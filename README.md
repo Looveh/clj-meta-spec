@@ -69,9 +69,10 @@ and register all found specs with `s/fdef`.
 (ms/register) ; does nothing in my.project.other
 ```
 
-Since calling `(ms/register)` in each ns is tedious and easily forgotten
-`meta-spec` supports the argument `:ns-regex` that you can call once in your
-project after all files have been loaded.
+Since calling `(ms/register)` in each ns is tedious and easily forgotten you can
+trigger registering your specs in a single place in your project with the
+`:ns-regex` argument. This must be called after all of your fns have been
+defined at run time.
 
 ```clj
 (ns my.project.core
