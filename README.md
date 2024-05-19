@@ -25,9 +25,6 @@
 helper API that lets you place specs closer to the thing they're spec'ing and
 treat specs as any other kind of metadata associated with your fns.
 
-It supports hot reloading of code by unregistering specs that were previously
-defined but that have since been removed from fns in a ns.
-
 ## Clojure and ClojureScript support
 
 `meta-spec` currently only supports Clojure on the JVM and does not support
